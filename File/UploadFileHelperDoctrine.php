@@ -39,7 +39,7 @@ class UploadFileHelperDoctrine implements UploadFileHelperInterface
     {
         $this->managerRegistry = $registry;
         $this->managerName     = $managerName;
-        $this->class           = $class === '' ? null : $class;
+        $this->setClass($class);
         $this->rootPath        = $rootPath;
         $this->mediaManager    = $mediaManager;
     }
@@ -71,6 +71,18 @@ class UploadFileHelperDoctrine implements UploadFileHelperInterface
      */
     public function setClass($class)
     {
+        if (empty($class)) {
+            $this->class = null;
+
+            return;
+        }
+
+        if (!is_subclass_of($class, 'Symfony\Cmf\Bundle\MediaBundle\FileInterface')) {
+            throw new \InvalidArgumentException(sprintf(
+                'The class "%s" does not implement Symfony\Cmf\Bundle\MediaBundle\FileInterface',
+                $class
+            ));
+        }
         $this->class = $class;
     }
 
@@ -121,7 +133,9 @@ class UploadFileHelperDoctrine implements UploadFileHelperInterface
      *
      * @param UploadedFile $file
      *
-     * @return bool
+     * @return boolean true either returns true or throws an exception
+     *
+     * @throws UploadException if the upload failed for some reason.
      */
     protected function validateFile(UploadedFile $file)
     {

@@ -28,7 +28,7 @@ interface UploadFileHelperInterface
     /**
      * Get helper
      *
-     * @param $name leave null to get the default helper
+     * @param string $name leave null to get the default helper
      *
      * @return UploadEditorHelperInterface|null
      */

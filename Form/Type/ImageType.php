@@ -2,6 +2,7 @@
 
 namespace Symfony\Cmf\Bundle\MediaBundle\Form\Type;
 
+use Symfony\Cmf\Bundle\MediaBundle\File\UploadFileHelperInterface;
 use Symfony\Cmf\Bundle\MediaBundle\Form\DataTransformer\ModelToFileTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -12,17 +13,20 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class ImageType extends AbstractType
 {
     private $dataClass;
+    private $uploadFileHelper;
     private $useImagine;
     private $defaultFilter;
 
     /**
-     * @param string $class
-     * @param bool   $useImagine
-     * @param bool   $defaultFilter
+     * @param string                    $class
+     * @param UploadFileHelperInterface $uploadFileHelper
+     * @param bool                      $useImagine
+     * @param bool                      $defaultFilter
      */
-    public function __construct($class, $useImagine = false, $defaultFilter = false)
+    public function __construct($class, UploadFileHelperInterface $uploadFileHelper, $useImagine = false, $defaultFilter = false)
     {
         $this->dataClass = $class;
+        $this->uploadFileHelper = $uploadFileHelper;
         $this->useImagine = $useImagine;
         $this->defaultFilter = $this->useImagine ? $defaultFilter : false;
     }
@@ -39,7 +43,7 @@ class ImageType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $transformer = new ModelToFileTransformer($this->dataClass);
+        $transformer = new ModelToFileTransformer($this->uploadFileHelper);
         $builder->addModelTransformer($transformer);
     }
 
