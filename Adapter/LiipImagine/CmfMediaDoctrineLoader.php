@@ -12,8 +12,7 @@
 namespace Symfony\Cmf\Bundle\MediaBundle\Adapter\LiipImagine;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Imagine\Image\ImagineInterface;
-use Liip\ImagineBundle\Imagine\Data\Loader\AbstractDoctrineLoader;
+use Liip\ImagineBundle\Binary\Loader\AbstractDoctrineLoader;
 use Symfony\Cmf\Bundle\MediaBundle\BinaryInterface;
 use Symfony\Cmf\Bundle\MediaBundle\FileSystemInterface;
 use Symfony\Cmf\Bundle\MediaBundle\ImageInterface;
@@ -32,14 +31,12 @@ class CmfMediaDoctrineLoader extends AbstractDoctrineLoader
     /**
      * Constructor.
      *
-     * @param ImagineInterface      $imagine
      * @param ManagerRegistry       $registry
      * @param string                $managerName
      * @param MediaManagerInterface $mediaManager
      * @param string                $class        fully qualified class name of image
      */
     public function __construct(
-        ImagineInterface $imagine,
         ManagerRegistry $registry,
         $managerName,
         MediaManagerInterface $mediaManager,
@@ -47,7 +44,7 @@ class CmfMediaDoctrineLoader extends AbstractDoctrineLoader
     {
         $manager = $registry->getManager($managerName);
 
-        parent::__construct($imagine, $manager, $class);
+        parent::__construct($manager, $class);
 
         $this->mediaManager = $mediaManager;
     }
